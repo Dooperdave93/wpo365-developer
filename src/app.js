@@ -55,74 +55,74 @@ const App = (_) => {
   const [userPicSrc, updateUserPicSrc] = React.useState(null)
   const [lastUserPicSrcError, updateLastUserPicSrcError] = React.useState('')
 
+
+/**
+* Get a user's recently used documents.
+*/
+React.useEffect(() => {
+  fetch(apiUrl + '/sites', {
+  method: 'POST',
+  headers: {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json; odata=verbose',
+  'X-WP-Nonce': nonce,
+  },
+  body: JSON.stringify({
   /**
-   * Get a user's recently used documents.
-   */
-  React.useEffect(() => {
-    fetch(apiUrl + '/me', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; odata=verbose',
-        'X-WP-Nonce': nonce,
-      },
-      body: JSON.stringify({
-        /**
-         * The data to be posted to Microsoft Graph e.g. { "requests": [ { "entityTypes": [ "message" ], "query": { "queryString": "contoso" } } ] }.
-         */
-        data: null,
-
-        /**
-         * Additional headers to be included when fetching from Microsoft Graph e.g. {consistencylevel: 'eventual'}
-         */
-        headers: null,
-
-        /**
-         * The query string e.g. mainly when reading data e.g. [sites]/wpo365demo.sharepoint.com:/.
-         */
-        query:
-          'insights/used?$orderby=LastUsed/LastAccessedDateTime+desc&$top=' +
-          pageSize,
-
-        /**
-         * Scope for the permissions needed e.g. https://graph.microsoft.com/Sites.Read.All.
-         */
-        scope: 'https://graph.microsoft.com/Sites.Read.All',
-
-        /**
-         * Whether to use application instead of delegated permissions.
-         */
-        application: false,
-
-        /**
-         * Whether the payload is binary (the result will be an object with exactly one property: { "binary": "[base64 encoded string]"" })
-         */
-        binary: false,
-
-        /**
-         * How to fetch from Microsoft Graph (default: GET).
-         */
-        method: 'GET',
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        if (typeof data == 'object' && data.value) {
-          updateItems(data.value)
-        } else {
-          throw 'Fetch returned an unexpected result -> ' + JSON.stringify(data)
-        }
-      })
-      .catch((err) => {
-        if (err.response) {
-          updateLastDocsError(JSON.stringify(err.response.data))
-        } else {
-          updateLastDocsError(JSON.stringify(err))
-        }
-      })
+  * The data to be posted to Microsoft Graph e.g. { "requests": [ { "entityTypes": [ "message" ], "query": { "queryString": "contoso" } } ] }.
+  */
+  data: null,
+  
+  /**
+  * Additional headers to be included when fetching from Microsoft Graph e.g. {consistencylevel: 'eventual'}
+  */
+  headers: null,
+  
+  /**
+  * The query string e.g. mainly when reading data e.g. [sites]/wpo365demo.sharepoint.com:/.
+  */
+  query:
+  '32b1ea3b-60ad-43ea-b5d1-3c06a01c4cd5,53b5c081-e8ac-4cb2-82a5-69ae905175fd/lists/4774b24a-2b3e-4278-beac-1e77c9220c68/items?$expand=fields($select=DocumentLink)',
+  
+  /**
+  * Scope for the permissions needed e.g. https://graph.microsoft.com/Sites.Read.All.
+  */
+  scope: 'https://graph.microsoft.com/Sites.Read.All',
+  
+  /**
+  * Whether to use application instead of delegated permissions.
+  */
+  application: false,
+  
+  /**
+  * Whether the payload is binary (the result will be an object with exactly one property: { "binary": "[base64 encoded string]"" })
+  */
+  binary: false,
+  
+  /**
+  * How to fetch from Microsoft Graph (default: GET).
+  */
+  method: 'GET',
+  }),
+  })
+  .then((response) => response.json())
+  .then((data) => {
+  console.log(data)
+  if (typeof data == 'object' && data.value) {
+  updateItems(data.value)
+  } else {
+  throw 'Fetch returned an unexpected result -> ' + JSON.stringify(data)
+  }
+  })
+  .catch((err) => {
+  if (err.response) {
+  updateLastDocsError(JSON.stringify(err.response.data))
+  } else {
+  updateLastDocsError(JSON.stringify(err))
+  }
+  })
   }, [])
-
+  
   /**
    * Get a user's profile picture
    */
